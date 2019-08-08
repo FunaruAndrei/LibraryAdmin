@@ -1,0 +1,180 @@
+<h1 mat-dialog-title fxLayoutAlign="center center">
+    <span *ngIf="data.type=='add'">
+        Adauga carte
+    </span>
+    <span *ngIf="data.type=='edit'">
+        Editeaza carte
+    </span>
+</h1>
+<div mat-dialog-content class="example-container">
+    <div fxLayout="column" fxLayoutGap="10px">
+        <div class="input-row" fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field fxFlex *ngIf="data.type=='edit'">
+                <input matInput placeholder="Id carte" disabled [(ngModel)]="data.book.bookId">
+            </mat-form-field>
+            <mat-form-field fxFlex>
+                <input matInput placeholder="Titlu carte" [(ngModel)]="data.book.title">
+            </mat-form-field>
+        </div>
+        <div class="input-row" fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field fxFlex>
+                <input matInput placeholder="ISBN" [(ngModel)]="data.book.isbn">
+            </mat-form-field>
+            <mat-form-field fxFlex>
+                <input matInput [matDatepicker]="picker" placeholder="Data aparitie" [(ngModel)]="data.book.year" disabled mat-datepicker-toggle>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker disabled="false"></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="input-row" fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field fxFlex>
+                <input matInput placeholder="URL imagine" [(ngModel)]="data.book.imageUrl">
+            </mat-form-field>
+            <mat-form-field fxFlex>
+                <input matInput placeholder="Editura" [(ngModel)]="data.book.editura">
+            </mat-form-field>
+        </div>
+        <div class="input-row" fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field fxFlex>
+                <input matInput placeholder="Limba" [(ngModel)]="data.book.language">
+            </mat-form-field>
+            <mat-form-field fxFlex>
+                <input type="number" matInput placeholder="Pret cumparare" [(ngModel)]="data.book.buyPrice">
+            </mat-form-field>
+            <mat-form-field fxFlex>
+                <input type="number" matInput placeholder="Nr pagini" [(ngModel)]="data.book.nrOfPages">
+            </mat-form-field>
+        </div>
+
+        <div class="input-row">
+            <mat-form-field fxFlex>
+                <textarea rows="3" matInput placeholder="Descriere" [(ngModel)]="data.book.description"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div class="input-row">
+            <mat-form-field class="example-chip-list" fxFlex>
+                <mat-chip-list #chipListA>
+                    <mat-chip *ngFor="let autor of autoriSelected"
+                              [selectable]="selectable"
+                              [removable]="removable"
+                              (removed)="removeAutor(autor)">
+                        {{autor.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Autori..."
+                           #autorInput
+                           [formControl]="autorCtrl"
+                           [matAutocomplete]="autoa"
+                           [matChipInputFor]="chipListA"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           [matChipInputAddOnBlur]="addOnBlur">
+                </mat-chip-list>
+                <mat-autocomplete #autoa="matAutocomplete" (optionSelected)="selectedAutor($event)">
+                    <mat-option *ngFor="let autor of data.autori" [value]="autor">
+                        {{autor.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="input-row">
+            <mat-form-field class="example-chip-list" fxFlex>
+                <mat-chip-list #chipListG>
+                    <mat-chip *ngFor="let genre of genresSelected"
+                              [selectable]="selectable"
+                              [removable]="removable"
+                              (removed)="removeGenre(genre)">
+                        {{genre.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Genuri..."
+                           #genreInput
+                           [formControl]="genreCtrl"
+                           [matAutocomplete]="autog"
+                           [matChipInputFor]="chipListG"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           [matChipInputAddOnBlur]="addOnBlur">
+                </mat-chip-list>
+                <mat-autocomplete #autog="matAutocomplete" (optionSelected)="selectedGenre($event)">
+                    <mat-option *ngFor="let genre of data.genres" [value]="genre">
+                        {{genre.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="input-row">
+            <mat-form-field class="example-chip-list" fxFlex>
+                <mat-chip-list #chipListS>
+                    <mat-chip *ngFor="let store of storesSelected"
+                              [selectable]="selectable"
+                              [removable]="removable"
+                              (removed)="removeStore(store)">
+                        {{store.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Biblioteci..."
+                           #genreInput
+                           [formControl]="genreCtrl"
+                           [matAutocomplete]="autos"
+                           [matChipInputFor]="chipListS"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                           [matChipInputAddOnBlur]="addOnBlur">
+                </mat-chip-list>
+                <mat-autocomplete #autos="matAutocomplete" (optionSelected)="selectedStore($event)">
+                    <mat-option *ngFor="let store of data.stores" [value]="store">
+                        {{store.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="storeId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Id. </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.storeId}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="store.name">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Nume </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.store.name}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="store.address">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Adresa </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.store.address}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="stock">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Stock. </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element">
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="Stock" [(ngModel)]="element.stock">
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20, 30]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center">
+    <button mat-button color="primary" (click)="onYesClick()" cdkFocusInitial *ngIf="data.type=='add'">
+        <mat-icon>add</mat-icon> Adauga
+    </button>
+    <button mat-button color="primary" (click)="onYesClick()" cdkFocusInitial *ngIf="data.type=='edit'">
+        <mat-icon>save</mat-icon> Salveaza
+    </button>
+    <button mat-button color="warn" (click)="onNoClick()">
+        <mat-icon>close</mat-icon> Renunta
+    </button>
+</div>

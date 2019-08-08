@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<app-root>
+</app-root>
+
+<script type="text/javascript">
+    window.addEventListener("load", function () {
+        if (window.location.hash == "#/") {
+            console.log("Here");
+            window.location.hash = "#/library/index"
+        }
+    });
+
+</script>

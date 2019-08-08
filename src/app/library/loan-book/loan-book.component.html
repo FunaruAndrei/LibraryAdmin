@@ -1,0 +1,52 @@
+<h1 mat-dialog-title fxLayoutAlign="center center">Imprumuta carte</h1>
+<div mat-dialog-content>
+    <div fxLayout="column">
+        <div fxFlex>
+            <mat-form-field class="example-full-width">
+                <textarea matInput [(ngModel)]="data.mention" placeholder="Mentiuni"></textarea>
+            </mat-form-field>
+        </div>
+        <div fxFlex>
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="storeId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Id. </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.storeId}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="store.name">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Nume </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.store.name}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="store.address">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Adresa </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.store.address}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="stock">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Stock. </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element"> {{element.stock}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let element" fxLayoutAlign="end center">
+                        <button mat-button color="primary" (click)="Imprumuta(element)">Imprumuta</button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20, 30]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center">
+    <button mat-button color="warn" (click)="onNoClick()">
+        <mat-icon>close</mat-icon> Renunta
+    </button>
+</div>

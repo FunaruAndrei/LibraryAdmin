@@ -1,0 +1,78 @@
+
+<div fxLayout="row">
+    <mat-form-field fxFlex>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <div fxFlex="2 2 calc(10em + 10px)"></div>
+    <div fxFlex fxLayoutAlign="end center">
+        <button mat-button color="accent" (click)="AddBook()">
+            <mat-icon>add</mat-icon> Adauga
+        </button>
+    </div>
+</div>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="imageUrl">
+            <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element">
+                <img [src]="element.imageUrl" class="img-fluid img-thumbnail">
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="bookId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Id. </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.bookId}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Titlu </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="isbn">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> ISBN </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.isbn}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="year">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Data aparitie </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.year | date:'MMMM-yyyy'}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="editura">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Editura </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.editura}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="language">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Limba </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.language}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nrOfPages">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Nr. pagini </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.nrOfPages | number}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="buyPrice">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Pret cumparare </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.buyPrice | number}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element" fxLayoutAlign="end center">
+                <button mat-button color="primary" (click)="EditBook(element)">Edit</button>
+                <button mat-button color="warn" (click)="deleteBook(element)">Delete</button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 30]" showFirstLastButtons></mat-paginator>
+</div>

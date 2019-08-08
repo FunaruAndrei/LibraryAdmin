@@ -1,0 +1,51 @@
+
+<div fxLayout="row">
+    <mat-form-field fxFlex>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <div fxFlex="2 2 calc(10em + 10px)"></div>
+    <div fxFlex fxLayoutAlign="end center">
+        <button mat-button color="accent" (click)="AddStore()">
+            <mat-icon>add</mat-icon> Adauga
+        </button>
+    </div>
+</div>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="storeId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Id. </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.storeId}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Adresa </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="program">
+            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Program </mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element"> {{element.program}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-cell mat-cell *matCellDef="let element" fxLayoutAlign="end center">
+                <button mat-button color="primary" (click)="EditStore(element)">Edit</button>
+                <button mat-button color="warn" (click)="deleteStore(element)">Delete</button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 30]" showFirstLastButtons></mat-paginator>
+</div>

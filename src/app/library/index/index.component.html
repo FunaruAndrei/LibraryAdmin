@@ -1,0 +1,110 @@
+<div fxLayout="row">
+    <div fxFlex="20">
+        <div class="searchBox">
+            <mat-card class="mat-elevation-z2 mb-3">
+                <mat-card-content>
+                    <mat-card-title>
+                        Filtreaza
+                    </mat-card-title>
+                    <mat-form-field class="example-full-width">
+                        <input type="text" placeholder="Gen" matInput [formControl]="genControl" [matAutocomplete]="autog">
+                        <mat-autocomplete #autog="matAutocomplete">
+                            <mat-option *ngFor="let gen of genres" [value]="gen.name">
+                                {{gen.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width">
+                        <input type="text" placeholder="Autor" matInput [formControl]="autorControl" [matAutocomplete]="autoa">
+                        <mat-autocomplete #autoa="matAutocomplete">
+                            <mat-option *ngFor="let aut of authors" [value]="aut.name">
+                                {{aut.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="An aparitie" type="number" [formControl]="yearControl">
+                    </mat-form-field>
+                    <button mat-button (click)="GetBooksButton()">
+                        <i class="fas fa-search"></i> Cauta
+                    </button>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="mat-elevation-z2">
+                <mat-card-content>
+                    <mat-card-title>
+                        Cauta
+                    </mat-card-title>
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Cauta in rezultate afisate" (keyup)="applyFilter($event.target.value)">
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+    </div>
+    <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="flex-start" fxFlex="60" style="height:100%;overflow: auto">
+        <ng-container *ngFor="let book of booksShow" >
+            <mat-card fxFlex="0 1 calc(33.3% - 32px)"
+                      class="example-card mat-elevation-z2 mb-3">
+
+                <div style="height:300px;text-align:center">
+                    <img class="img-responsive" style="max-height:300px;width:auto;align-self:center" mat-card-image [src]="book.imageUrl" alt="Photo">
+                </div>
+
+                <mat-card-content>
+                    <div gdAreas="title star | subtitle star"
+                         gdGap="16px"
+                         gdRows="auto auto"
+                         gdColumns="auto 40px">
+                        <mat-card-title gdArea="title">{{book.title}}</mat-card-title>
+                        <mat-card-subtitle gdArea="subtitle">{{GetAut(book)}}</mat-card-subtitle>
+                        <div *ngIf="user!=undefined" gdArea="star">
+                            <button mat-button style="min-width:40px" *ngIf="book.wish==true"
+                                    matTooltip="Elimina din favorite"
+                                    (click)="RemoveFromWishList(book)">
+                                <i class="fas fa-star text-warning"></i>
+                            </button>
+                            <button mat-button style="min-width:40px" *ngIf="book.wish==false"
+                                    matTooltip="Adauga la favorite"
+                                    (click)="AddToWishList(book)">
+                                <i class="fas fa-star text-dark"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p>
+                        <b class="mr-2">Genuri:</b>
+                        <mat-chip-list class="d-inline-block">
+                            <mat-chip *ngFor="let gen of book.genres">{{gen.name}}</mat-chip>
+                        </mat-chip-list>
+                    </p>
+                    <p>
+                        <b>Rating:</b>
+                        <bar-rating class="d-inline-block" [(rate)]="book.rate" [max]="5" [readOnly]="true"></bar-rating> {{book.rate}}
+                    </p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button (click)="OpenDetail(book)">
+                        Detalii
+                    </button>
+                    <a mat-button color="primary" href="/Identity/Account/Login" *ngIf="user==undefined" matTooltip="Autentifica-te pentru a inmprumuta!">
+                        Autentificare
+                    </a>
+                    <div *ngIf="user!=undefined" style="display:inline-block">
+                        <button mat-button color="primary" *ngIf="book.loan==''" (click)="LoanBook(book)">
+                            Imprumuta
+                        </button>
+                        <div style="display:inline-block" *ngIf="book.loan!=''" matTooltip="{{book.loan=='Pending' ? 'O cerere de imprumut a fost adaugata deja!' : 'Carte imprumutata!'}}">
+                            <button mat-button color="primary" disabled>
+                                Imprumuta
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+        </ng-container>
+    </div>
+
+
+</div>

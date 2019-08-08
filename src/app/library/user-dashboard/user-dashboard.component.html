@@ -1,0 +1,66 @@
+<div class="container">
+    <div>
+        <h3>Wishlist:</h3>
+    </div>
+    <div>
+        <ng-container *ngFor="let book of wishListbooks">
+            <mat-card fxFlex="0 1 calc(33.3% - 32px)"
+                      class="example-card mat-elevation-z2 mb-3">
+
+                <div style="height:300px;text-align:center">
+                    <img class="img-responsive" style="max-height:300px;width:auto;align-self:center" mat-card-image [src]="book.imageUrl" alt="Photo">
+                </div>
+
+                <mat-card-content>
+                    <div gdAreas="title star | subtitle star"
+                         gdGap="16px"
+                         gdRows="auto auto"
+                         gdColumns="auto 40px">
+                        <mat-card-title gdArea="title">{{book.title}}</mat-card-title>
+                        <mat-card-subtitle gdArea="subtitle">{{GetAut(book)}}</mat-card-subtitle>
+                        <div *ngIf="user!=undefined" gdArea="star">
+                            <button mat-button style="min-width:40px" *ngIf="book.wish==true"
+                                    matTooltip="Elimina din favorite"
+                                    (click)="RemoveFromWishList(book)">
+                                <i class="fas fa-star text-warning"></i>
+                            </button>
+                            <button mat-button style="min-width:40px" *ngIf="book.wish==false"
+                                    matTooltip="Adauga la favorite"
+                                    (click)="AddToWishList(book)">
+                                <i class="fas fa-star text-dark"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p>
+                        <b class="mr-2">Genuri:</b>
+                        <mat-chip-list class="d-inline-block">
+                            <mat-chip *ngFor="let gen of book.genres">{{gen.name}}</mat-chip>
+                        </mat-chip-list>
+                    </p>
+                    <p>
+                        <b>Rating:</b>
+                        <bar-rating class="d-inline-block" [(rate)]="book.rate" [max]="5" [readOnly]="true"></bar-rating> {{book.rate}}
+                    </p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button [routerLink]="['/library/book', book.bookId]">
+                        Detalii
+                    </button>
+                    <a mat-button color="primary" href="/Identity/Account/Login" *ngIf="user==undefined" matTooltip="Autentifica-te pentru a inmprumuta!">
+                        Autentificare
+                    </a>
+                    <div *ngIf="user!=undefined" style="display:inline-block">
+                        <button mat-button color="primary" *ngIf="book.loan==''">
+                            Imprumuta
+                        </button>
+                        <div style="display:inline-block" *ngIf="book.loan!=''" matTooltip="{{book.loan=='Pending' ? 'O cerere de imprumut a fost adaugata deja!' : 'Carte imprumutata!'}}">
+                            <button mat-button color="primary" disabled>
+                                Imprumuta
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+        </ng-container>
+    </div>
+</div>

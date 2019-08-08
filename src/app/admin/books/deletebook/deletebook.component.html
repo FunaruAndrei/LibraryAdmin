@@ -1,0 +1,12 @@
+<h1 mat-dialog-title fxLayoutAlign="center center">Sterge carte</h1>
+<div mat-dialog-content>
+    <p>Esti sigur ca vrei sa stergi autorul <b>{{data.title}}</b> cu id-ul <b>{{data.bookId}}</b>?</p>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-around center">
+    <button mat-button color="warn" [mat-dialog-close]="data" cdkFocusInitial>
+        <mat-icon>delete</mat-icon> Da
+    </button>
+    <button mat-button color="primary" (click)="onNoClick()">
+        <mat-icon>close</mat-icon> Nu
+    </button>
+</div>

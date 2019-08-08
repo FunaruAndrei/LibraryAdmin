@@ -1,0 +1,174 @@
+<div class="container"
+     *ngIf="book"
+     gdAreas="image content | review review"
+     gdGap="16px"
+     gdRows="auto auto"
+     gdColumns="300px auto">
+
+    <div gdArea="image">
+        <mat-card fxLayout="column" class="mat-elevation-z2" style="height:100%">
+            <div fxFlex style="height:300px;text-align:center">
+                <img class="img-responsive" style="max-height:300px;width:auto;align-self:center" mat-card-image [src]="book.imageUrl" alt="Photo">
+            </div>
+            <div fxFlex fxLayoutAlign="center end">
+                <div fxLayout="row" fxLayoutAlign="center center" class="example-full-width" *ngIf="user!=undefined">
+                    <button mat-button class="btn-block" color="primary" *ngIf="book.loan==''" (click)="LoanBook(book)">
+                        Imprumuta
+                    </button>
+                    <div class="d-inline-block" *ngIf="book.loan!=''" matTooltip="{{book.loan=='Pending' ? 'O cerere de imprumut a fost adaugata deja!' : 'Carte imprumutata!'}}">
+                        <button mat-button color="primary" class="btn-block" disabled>
+                            Imprumuta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+    <div gdArea="content">
+        <mat-card class="mat-elevation-z2">
+            <div gdAreas="title star"
+                 gdGap="16px"
+                 gdColumns="auto 60px">
+                <div gdArea="title">
+                    <mat-card-title>{{book.title}}</mat-card-title>
+                    <mat-card-subtitle>{{GetAut(book)}}</mat-card-subtitle>
+                </div>
+                <div *ngIf="user!=undefined" gdArea="star" gdGridAlign="center center">
+                    <button mat-button style="min-width:40px;padding:16px;" *ngIf="book.wish==true"
+                            matTooltip="Elimina din favorite"
+                            (click)="RemoveFromWishList(book)">
+                        <i class="fas fa-2x fa-star text-warning"></i>
+                    </button>
+                    <button mat-button style="min-width:40px;padding:16px;" *ngIf="book.wish==false"
+                            matTooltip="Adauga la favorite"
+                            (click)="AddToWishList(book)">
+                        <i class="fas fa-2x fa-star text-dark"></i>
+                    </button>
+                </div>
+            </div>
+            <p>
+                <b class="mr-2">Genuri:</b>
+                <mat-chip-list class="d-inline-block">
+                    <mat-chip *ngFor="let gen of book.genres">{{gen.name}}</mat-chip>
+                </mat-chip-list>
+            </p>
+            <div class="mb-2" fxLayout="row">
+                <div fxFlex>
+                    <b class="mr-1">Editura:</b>
+                    <span>{{book.editura}}</span>
+                </div>
+                <div fxFlex>
+                    <b class="mr-1">ISBN:</b>
+                    <span>{{book.isbn}}</span>
+                </div>
+            </div>
+            <div class="mb-2" fxLayout="row">
+                <div fxFlex>
+                    <b class="mr-1">An aparitie:</b>
+                    <span>{{book.year | date:'MMMM-yyyy'}}</span>
+                </div>
+                <div fxFlex>
+                    <b class="mr-1">Limba:</b>
+                    <span>{{book.language}}</span>
+                </div>
+            </div>
+            <div class="mb-2" fxLayout="row">
+                <div fxFlex>
+                    <b class="mr-1">Rating:</b>
+                    <bar-rating class="d-inline-block" [(rate)]="reviewAvg" [max]="5" [readOnly]="true"></bar-rating> {{reviewAvg}}
+                </div>
+                <div fxFlex>
+                    <b class="mr-1">Nr. pagini:</b>
+                    <span>{{book.nrOfPages}}</span>
+                </div>
+            </div>
+            <div fxLayout="row">
+                <div *ngIf="fullDescription==false">
+                    <pre class="pre-description">
+                    <span>{{book.description | truncate:200}}</span>
+                  </pre>
+                    <div fxLayoutAlign="center center">
+                        <button mat-button color="primary" (click)="fullDescription=!fullDescription">
+                            Afiseaza toata descrierea
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="fullDescription==true">
+                    <pre class="pre-scrollable pre-description">
+                    <span>{{book.description}}</span>
+                  </pre>
+                    <div fxLayoutAlign="center center">
+                        <button mat-button color="warn" (click)="fullDescription=!fullDescription">
+                            Ascunde toata descrierea
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </mat-card>
+    </div>
+    <div gdArea="review">
+        <mat-card class="mat-elevation-z2">
+            <mat-toolbar class="mb-3">
+                <span>Reviews</span>
+            </mat-toolbar>
+            <mat-card class="mat-elevation-z2 mb-3">
+                <mat-card-content>
+                    <div *ngIf="user!=undefined && !ExistReview()" fxLayout="column">
+                        <div fxFlex >
+                            <mat-form-field class="example-full-width">
+                                <textarea matInput [(ngModel)]="addReviewText" placeholder="Leave a comment"></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div fxFlex>
+                            <div fxLayout="row">
+                                <div fxFlex>
+                                    <b>
+                                        Rating:
+                                    </b>
+                                    <bar-rating class="d-inline-block" [(rate)]="addReviewRate" [max]="5"></bar-rating> {{addReviewRate}}
+                                </div>
+                                <div fxFlex fxLayoutAlign="end center">
+                                    <button mat-button (click)="AddReview()">
+                                        Adauga <mat-icon class="ml-1">send</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="ExistReview()">
+                        <i class="text-muted mr-2"> Ai adaugat deja review pentru aceasta carte! </i>
+                    </div>
+                    <div *ngIf="user==undefined">
+                        <i class="text-muted mr-2"> Autentifica-te pentru a lasa review </i>
+                        <a mat-button color="primary" href="/Identity/Account/Login">
+                            Autentificare
+                        </a>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="mat-elevation-z2 mb-3" *ngFor="let rev of book.reviews">
+                <div gdAreas="user free free rate" class="mb-2">
+                    <div gdArea="rate" class="text-right">
+                        <bar-rating class="d-inline-block" [(rate)]="rev.rate" [max]="5" [readOnly]="true"></bar-rating> {{rev.rate}}
+                    </div>
+                    <div gdArea="free">
+
+                    </div>
+                    <div gdArea="user">
+                        {{rev.bibliotecaUser.userName}}
+                    </div>
+                </div>
+                <div>
+                    <pre class="pre-description mb-0">
+                    <span>{{rev.text}}</span>
+                    </pre>
+                </div>
+                <div class="text-right text-muted">
+                    <i>{{rev.data | date:'dd-MMMM-yyyy HH:mm'}}</i>
+                </div>
+            </mat-card>
+        </mat-card>
+
+    </div>
+</div>
